@@ -99,13 +99,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout main  # 이 부분이 중요! detached HEAD 상태 해소
-          git pull origin main
 
+          git stash push -m "temp-changes"
+          git checkout main
+          git pull origin main
+          git stash pop
+          
           git add $FRAMEWORK_NAME.podspec
           git commit -m "Update podspec for $RELEASE_VERSION" || echo "No changes to commit"
-
-          git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} main
+          git push https://x-access-token:${CI_PUSH_TOKEN}@github.com/${{ github.repository }} main
 
       - name: Create GitHub Release & Upload
         uses: softprops/action-gh-release@v2
