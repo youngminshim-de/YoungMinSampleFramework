@@ -89,13 +89,17 @@ jobs:
           sed -i '' "s|:http => .*|:http => '$URL',|" $PODSPEC
           sed -i '' "s|:sha256 => .*|:sha256 => '$SHA'|" $PODSPEC
 
+      - name: Get current branch name
+        id: get_branch
+        run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> "$GITHUB_OUTPUT"
+      
       - name: Commit updated podspec
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add $FRAMEWORK_NAME.podspec
           git commit -m "Update podspec for $RELEASE_VERSION" || echo "No changes to commit"
-          git push
+          git push origin HEAD:${{ steps.get_branch.outputs.branch }}
 
       - name: Create GitHub Release & Upload
         uses: softprops/action-gh-release@v2
