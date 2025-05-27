@@ -39,7 +39,7 @@ jobs:
         run: |
           xcodebuild archive \
             -scheme $FRAMEWORK_NAME \
-            -project "$(pwd)/$FRAMEWORK_NAME/$FRAMEWORK_NAME.xcodeproj" \
+            -project "$(pwd)/$FRAMEWORK_NAME.xcodeproj" \
             -destination 'generic/platform=iOS' \
             -archivePath archives/device \
             SKIP_INSTALL=NO \
@@ -48,7 +48,7 @@ jobs:
         run: |
           xcodebuild archive \
             -scheme $FRAMEWORK_NAME \
-            -project "$(pwd)/$FRAMEWORK_NAME/$FRAMEWORK_NAME.xcodeproj" \
+            -project "$(pwd)/$FRAMEWORK_NAME.xcodeproj" \
             -destination 'generic/platform=iOS Simulator' \
             -archivePath archives/simulator \
             SKIP_INSTALL=NO \
