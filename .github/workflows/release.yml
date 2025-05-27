@@ -10,7 +10,7 @@ jobs:
   release:
     runs-on: macos-13
     env:
-      FRAMEWORK_NAME: YoungminSampleFramework
+      FRAMEWORK_NAME: YoungMinSampleFramework
 
     steps:
       - name: Checkout
