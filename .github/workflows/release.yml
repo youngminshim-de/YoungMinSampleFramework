@@ -92,6 +92,12 @@ jobs:
       - name: Get current branch name
         id: get_branch
         run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> "$GITHUB_OUTPUT"
+        
+      - name: Debug token length
+        env:
+          CI_PUSH_TOKEN: ${{ secrets.PAT_FOR_CI_PUSH }}
+        run: |
+          echo "CI_PUSH_TOKEN length: ${#CI_PUSH_TOKEN}"
       
       - name: Commit updated podspec
         env:
