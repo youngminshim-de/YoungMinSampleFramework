@@ -92,12 +92,6 @@ jobs:
       - name: Get current branch name
         id: get_branch
         run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> "$GITHUB_OUTPUT"
-        
-      - name: Debug token length
-        env:
-          CI_PUSH_TOKEN: ${{ secrets.PAT_FOR_CI_PUSH }}
-        run: |
-          echo "CI_PUSH_TOKEN length: ${#CI_PUSH_TOKEN}"
       
       - name: Commit updated podspec
         env:
@@ -106,14 +100,16 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git stash push -m "temp-changes"
+          git remote set-url origin https://x-access-token:${CI_PUSH_TOKEN}@github.com/${{ github.repository }}
+
+          git stash push -m "podspec changes"
           git checkout main
           git pull origin main
           git stash pop
-          
+
           git add $FRAMEWORK_NAME.podspec
           git commit -m "Update podspec for $RELEASE_VERSION" || echo "No changes to commit"
-          git push https://x-access-token:${CI_PUSH_TOKEN}@github.com/${{ github.repository }} main
+          git push origin main
 
       - name: Create GitHub Release & Upload
         uses: softprops/action-gh-release@v2
