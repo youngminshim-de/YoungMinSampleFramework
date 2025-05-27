@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name         = 'YoungminSampleFramework'
+  s.name         = 'YoungMinSampleFramework'
   s.version      = '0.0.2'
   s.summary      = 'A reusable SDK named YoungminSampleFramework.'
   s.description  = <<-DESC
