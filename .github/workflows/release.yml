@@ -31,20 +31,24 @@ jobs:
           echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
           echo "ZIP_NAME=$FRAMEWORK_NAME-$VERSION.zip" >> $GITHUB_ENV
           echo "XCFRAMEWORK=$FRAMEWORK_NAME.xcframework" >> $GITHUB_ENV
-      # - name: Build device archive
-      #   run: |
-      #     xcodebuild archive \
-      #       -scheme $FRAMEWORK_NAME \
-      #       -project $FRAMEWORK_NAME.xcodeproj \
-      #       -destination 'generic/platform=iOS' \
-      #       -archivePath archives/device \
-      #       SKIP_INSTALL=NO \
-      #       BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+      - name: Print directory structure (debug)
+        run: |
+          echo "PWD: $(pwd)"
+          ls -R
+      - name: Build device archive
+        run: |
+          xcodebuild archive \
+            -scheme $FRAMEWORK_NAME \
+            -project "$(pwd)/$FRAMEWORK_NAME/$FRAMEWORK_NAME.xcodeproj" \
+            -destination 'generic/platform=iOS' \
+            -archivePath archives/device \
+            SKIP_INSTALL=NO \
+            BUILD_LIBRARY_FOR_DISTRIBUTION=YES
       - name: Build simulator archive
         run: |
           xcodebuild archive \
             -scheme $FRAMEWORK_NAME \
-            -project $FRAMEWORK_NAME.xcodeproj \
+            -project "$(pwd)/$FRAMEWORK_NAME/$FRAMEWORK_NAME.xcodeproj" \
             -destination 'generic/platform=iOS Simulator' \
             -archivePath archives/simulator \
             SKIP_INSTALL=NO \
