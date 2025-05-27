@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'YoungMinSampleFramework'
-  s.version      = '0.0.10'
+  s.version      = '0.0.11'
   s.summary      = 'A reusable SDK named YoungminSampleFramework.'
   s.description  = <<-DESC
     This is a binary SDK distributed via CocoaPods, packaged as an xcframework.
