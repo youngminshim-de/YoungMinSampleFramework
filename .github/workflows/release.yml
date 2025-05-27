@@ -1,0 +1,112 @@
+name: Build, Release, and Publish YoungminSampleFramework
+
+on:
+  workflow_dispatch:   # 수동 실행 활성화
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: macos-15
+    env:
+      FRAMEWORK_NAME: YoungMinSampleFramework
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+          clean: true
+          sparse-checkout: ''
+        
+      - name: Set up Ruby and CocoaPods
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2
+          bundler-cache: true
+
+      - name: Install CocoaPods
+        run: gem install cocoapods
+
+      - name: Set version env
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
+          echo "ZIP_NAME=$FRAMEWORK_NAME-$VERSION.zip" >> $GITHUB_ENV
+          echo "XCFRAMEWORK=$FRAMEWORK_NAME.xcframework" >> $GITHUB_ENV
+      - name: Print directory structure (debug)
+        run: |
+          echo "PWD: $(pwd)"
+          ls -R
+      - name: Build device archive
+        run: |
+          xcodebuild archive \
+            -scheme $FRAMEWORK_NAME \
+            -project "$(pwd)/$FRAMEWORK_NAME.xcodeproj" \
+            -destination 'generic/platform=iOS' \
+            -archivePath archives/device \
+            SKIP_INSTALL=NO \
+            BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+      - name: Build simulator archive
+        run: |
+          xcodebuild archive \
+            -scheme $FRAMEWORK_NAME \
+            -project "$(pwd)/$FRAMEWORK_NAME.xcodeproj" \
+            -destination 'generic/platform=iOS Simulator' \
+            -archivePath archives/simulator \
+            SKIP_INSTALL=NO \
+            BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+      - name: Create XCFramework
+        run: |
+          xcodebuild -create-xcframework \
+            -framework archives/device.xcarchive/Products/Library/Frameworks/$FRAMEWORK_NAME.framework \
+            -framework archives/simulator.xcarchive/Products/Library/Frameworks/$FRAMEWORK_NAME.framework \
+            -output $XCFRAMEWORK
+      - name: Zip XCFramework
+        run: zip -r $ZIP_NAME $XCFRAMEWORK
+
+      - name: Calculate SHA256
+        id: hash
+        run: |
+          SHA=$(shasum -a 256 $ZIP_NAME | cut -d ' ' -f 1)
+          echo "sha256=$SHA" >> $GITHUB_OUTPUT
+      - name: Patch .podspec
+        run: |
+          PODSPEC=$FRAMEWORK_NAME.podspec
+          VERSION=${{ env.RELEASE_VERSION }}
+          SHA=${{ steps.hash.outputs.sha256 }}
+          URL=\"https://github.com/${{ github.repository }}/releases/download/$VERSION/${{ env.ZIP_NAME }}\"
+          sed -i '' \"s|:http => .*|:http => $URL,|\" $PODSPEC
+          sed -i '' \"s|:sha256 => .*|:sha256 => '$SHA'|\" $PODSPEC
+      - name: Commit updated podspec
+        run: |
+          git config user.name \"github-actions[bot]\"
+          git config user.email \"github-actions[bot]@users.noreply.github.com\"
+          git add $FRAMEWORK_NAME.podspec
+          git commit -m \"Update podspec for $RELEASE_VERSION\"
+          git push
+      - name: Create GitHub Release & Upload
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          name: Release ${{ env.RELEASE_VERSION }}
+          files: ${{ env.ZIP_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lint Podspec
+        run: pod spec lint $FRAMEWORK_NAME.podspec --allow-warnings
+
+      - name: Push to CocoaPods Trunk
+        run: |
+          pod trunk push $FRAMEWORK_NAME.podspec --allow-warnings
+        env:
+          COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+
+      - name: Upload xcresult for analysis
+        if: always()  # 실패하든 성공하든 실행됨
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcresult-archive
+          path: /var/folders/q7/x09_16xd767gr8lwc56pjb_m0000gn/T/ResultBundle_*.xcresult
