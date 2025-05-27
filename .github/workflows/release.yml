@@ -35,14 +35,11 @@ jobs:
           echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
           echo "ZIP_NAME=$FRAMEWORK_NAME-$VERSION.zip" >> $GITHUB_ENV
           echo "XCFRAMEWORK=$FRAMEWORK_NAME.xcframework" >> $GITHUB_ENV
-      - name: Print directory structure (debug)
-        run: |
-          echo "PWD: $(pwd)"
-          ls -R
 
       - name: Clean archives folder
         run: |
           rm -rf archives
+          rm -rf $XCFRAMEWORK
           
       - name: Build device archive
         run: |
@@ -114,10 +111,3 @@ jobs:
           pod trunk push $FRAMEWORK_NAME.podspec --allow-warnings
         env:
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-
-      - name: Upload xcresult for analysis
-        if: always()  # 실패하든 성공하든 실행됨
-        uses: actions/upload-artifact@v4
-        with:
-          name: xcresult-archive
-          path: /var/folders/q7/x09_16xd767gr8lwc56pjb_m0000gn/T/ResultBundle_*.xcresult
