@@ -1,7 +1,6 @@
 name: Build, Release, and Publish YoungminSampleFramework
-
+# workflow_dispatch:   # 수동 실행 활성화
 on:
-  workflow_dispatch:   # 수동 실행 활성화
   push:
     tags:
       - '*'
@@ -35,10 +34,12 @@ jobs:
           echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
           echo "ZIP_NAME=$FRAMEWORK_NAME-$VERSION.zip" >> $GITHUB_ENV
           echo "XCFRAMEWORK=$FRAMEWORK_NAME.xcframework" >> $GITHUB_ENV
-      - name: Print directory structure (debug)
+
+      - name: Clean archives folder
         run: |
-          echo "PWD: $(pwd)"
-          ls -R
+          rm -rf archives
+          rm -rf $XCFRAMEWORK
+          
       - name: Build device archive
         run: |
           xcodebuild archive \
@@ -47,7 +48,10 @@ jobs:
             -destination 'generic/platform=iOS' \
             -archivePath archives/device \
             SKIP_INSTALL=NO \
-            BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+            BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
       - name: Build simulator archive
         run: |
           xcodebuild archive \
@@ -56,7 +60,10 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             -archivePath archives/simulator \
             SKIP_INSTALL=NO \
-            BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+            BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
       - name: Create XCFramework
         run: |
           xcodebuild -create-xcframework \
@@ -103,10 +110,3 @@ jobs:
           pod trunk push $FRAMEWORK_NAME.podspec --allow-warnings
         env:
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-
-      - name: Upload xcresult for analysis
-        if: always()  # 실패하든 성공하든 실행됨
-        uses: actions/upload-artifact@v4
-        with:
-          name: xcresult-archive
-          path: /var/folders/q7/x09_16xd767gr8lwc56pjb_m0000gn/T/ResultBundle_*.xcresult
