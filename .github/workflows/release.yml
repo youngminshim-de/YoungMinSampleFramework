@@ -95,7 +95,7 @@ jobs:
       
       - name: Commit updated podspec
         env:
-          CI_PUSH_TOKEN : ${{ secrets.PAT_FOR_CI_PUSH }}
+          CI_PUSH_TOKEN: ${{ secrets.PAT_FOR_CI_PUSH }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
