@@ -39,6 +39,11 @@ jobs:
         run: |
           echo "PWD: $(pwd)"
           ls -R
+
+      - name: Clean archives folder
+        run: |
+          rm -rf archives
+          
       - name: Build device archive
         run: |
           xcodebuild archive \
