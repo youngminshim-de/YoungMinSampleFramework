@@ -11,11 +11,10 @@ jobs:
     runs-on: macos-13
     env:
       FRAMEWORK_NAME: YoungMinSampleFramework
-
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
+        
       - name: Set up Ruby and CocoaPods
         uses: ruby/setup-ruby@v1
         with:
