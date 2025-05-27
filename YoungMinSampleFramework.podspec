@@ -15,8 +15,8 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
 
   s.source = {
-    :http => 'https://github.com/youngminshim-de/YoungMinSampleFramework/releases/download/0.0.10/YoungMinSampleFramework-0.0.10.zip',
-    :sha256 => '057fff53984b66d96b5458acee56221c3d6ca384159738578ab5f0b49cdb3acd'
+    :http => 'https://github.com/youngminshim-de/YoungMinSampleFramework/releases/download/0.0.11/YoungMinSampleFramework-0.0.11.zip',
+    :sha256 => '6c9becbb86af3b180c1bc5b00dcd032726fc49592a5cddda319e44eedeb46f1e'
   }
 
   s.vendored_frameworks = 'YoungminSampleFramework.xcframework'
