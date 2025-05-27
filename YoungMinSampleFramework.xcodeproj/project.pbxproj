@@ -25,22 +25,9 @@
 		D41A70A32DE5C731006F132C /* YoungMinSampleFrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YoungMinSampleFrameworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D41A70AB2DE5C731006F132C /* Exceptions for "YoungMinSampleFramework" folder in "YoungMinSampleFramework" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			publicHeaders = (
-				YoungMinSampleFramework.h,
-			);
-			target = D41A70982DE5C731006F132C /* YoungMinSampleFramework */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D41A709B2DE5C731006F132C /* YoungMinSampleFramework */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				D41A70AB2DE5C731006F132C /* Exceptions for "YoungMinSampleFramework" folder in "YoungMinSampleFramework" target */,
-			);
 			path = YoungMinSampleFramework;
 			sourceTree = "<group>";
 		};

@@ -1,0 +1,92 @@
+{
+  "ABIRoot": {
+    "kind": "Root",
+    "name": "YoungMinSampleFramework",
+    "printedName": "YoungMinSampleFramework",
+    "children": [
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "YoungMinSampleFramework",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "Sample",
+        "printedName": "Sample",
+        "children": [
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Sample",
+                "printedName": "YoungMinSampleFramework.Sample",
+                "usr": "s:23YoungMinSampleFramework0C0C"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:23YoungMinSampleFramework0C0CACycfc",
+            "mangledName": "$s23YoungMinSampleFramework0C0CACycfc",
+            "moduleName": "YoungMinSampleFramework",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          },
+          {
+            "kind": "Function",
+            "name": "test",
+            "printedName": "test()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:23YoungMinSampleFramework0C0C4testyyF",
+            "mangledName": "$s23YoungMinSampleFramework0C0C4testyyF",
+            "moduleName": "YoungMinSampleFramework",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "s:23YoungMinSampleFramework0C0C",
+        "mangledName": "$s23YoungMinSampleFramework0C0C",
+        "moduleName": "YoungMinSampleFramework",
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
+        ]
+      }
+    ],
+    "json_format_version": 8
+  },
+  "ConstValues": []
+}
